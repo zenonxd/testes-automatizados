@@ -36,7 +36,17 @@
 
 # Parte prática
 
-
+[Visão geral JUnit](#visão-gerão-junit5)
+-
+- [Utilizando Factory para instanciar objeto](#padrão-de-projeto-factory-para-instanciar-objetos)
+- [Primeiro teste na prática](#primeiro-teste-na-prática-com-junit)
+- [Testando método deposit](#testando-se-o-método-deposit-está-realmente-depositando-e-descontando-a-taxa)
+- [Testando deposit com quantia negativa](#testando-se-o-método-deposit-não-faz-nada-com-quantia-negativa)
+- [Teste full withdraw](#teste-saque-total)
+- [Teste withdraw](#teste-saque)
+  - [Saldo positivo](#saque-com-saldo-positivo-maior-que-o-saque)
+  - [Saldo negativo (com exceção)](#saque-com-saldo-insuficiente-exception)
+- [Observação TDD](#observação-tdd)
 
 # Objetivo
 
@@ -159,3 +169,87 @@ e valores aleatórios.
 5. O que define se um método @Test passa ou não são as "assertions" deste método
 6. Se um ou mais falhas ocorrem, estão são mostradas depois da execução do teste
 
+## Primeiro teste na prática com JUnit
+
+Inicialmente já sabemos que na nossa aplicação Spring é criado automaticamente um pacote "test". Assim sendo, se formos
+testar uma entidade, criar um pacote entities, se for repository uma de respositoy e assim vai...
+
+No exemplo abaixo é uma aplicação sem Spring ou ela possui uma classe Account com atributo Id e balance + getters e
+setters e métodos de: deposit, withdraw e fullWithdraw:
+
+![img.png](img.png)
+
+![img_1.png](img_1.png)
+
+No pacote test > entities: criar "AccountTests" onde ficará todos os testes pertinentes a essa entidade.
+
+### Testando se o método deposit está realmente depositando e descontando a taxa
+
+Agora aplicamos tudo da parte prática.
+
+A nomeclatura sendo: o nome do método + "should" + efeito do método + cenario
+
+E o padrão AAA: instanciando o objeto, executando a ação e depois aferindo o resultado.
+
+![img_2.png](img_2.png)
+
+### Testando se o método deposit não faz nada com quantia negativa
+
+Tentando depositar uma quantia negativa.
+
+Instanciamos a conta com um valor esperado. Ao realizar o depósito negativo, o valor deve continuar o mesmo.
+
+![img_3.png](img_3.png)
+
+### Teste saque total
+
+Deve limpar o saldo e retornar todo o saldo.
+
+Temos dois assertions porque:
+
+O primeiro: testa se o valor que a gente espera de fato é zero.
+
+O segundo: testa para ver se o retorno (o que foi sacado) é igual ao balanço inicial.
+
+![img_7.png](img_7.png)
+
+### Teste saque
+
+Um cenário onde a quantia que queremos sacar está ok! E outro quando a quantia que queremos sacar é superior ao saldo
+onde terá uma exception.
+
+#### Saque com saldo positivo (maior que o saque)
+
+![img_8.png](img_8.png)
+
+#### Saque com saldo insuficiente (exception)
+
+Agora não será somente assertTrue ou That e sim **Throws, em virtude da exception!**
+
+E o AA ficará dentro de uma expressão lambda, veja:
+
+![img_9.png](img_9.png)
+
+## Padrão de projeto Factory para instanciar objetos
+
+O ideal é que tenhamos uma classe para instanciar objetos para gente (caso seja uma operação repetitiva no sistema).
+
+No pacote testes criar um pacote factory. Como a classe é Account se chamará **AccountFactory**. Criaremos um método
+para instanciar uma Account vazia (esses métodos geralmente são estáticos).
+
+![img_4.png](img_4.png)
+
+Como visto acima, pode ser até mesmo **uma classe com um valor pré-definido**.
+
+Agora dentro dos testes, ao invés de instanciar um new Account, utilizaremos a factory.
+
+![img_5.png](img_5.png)
+
+![img_6.png](img_6.png)
+
+## Observação TDD
+
+O que fizemos acima, não foi TDD. Seria somente se tivéssemos criado no máximo a classe Account sem os métodos, somente
+atributos com getters e setters.
+
+O ideal seria criar a classe de Testes, exatamente como está ali em cima depois implementar os métodos.
