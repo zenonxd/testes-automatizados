@@ -4,7 +4,39 @@
 
 # Tópicos
 
-[]()
+# Parte teórica
+
+[Tipos de teste](#tipos-de-teste)
+-
+- [Teste unitário](#teste-unitário)
+- [Teste de integração](#teste-de-integração)
+- [Teste funcional](#teste-funcional)
+
+[Benefícios de testes automatizados](#benefícios-de-testes-automizados)
+-
+- [Detecção de mudanças](#1-detecta-facilmente-se-mudanças-violam-regras-do-sistema)
+- [Forma de documentação](#2-é-uma-forma-de-documentação)
+- [Redução de custos](#3-redução-de-custos)
+- [Melhor design](#4-melhora-design-da-solução)
+
+[TDD - Teste Driven Development](#o-que-é-tdd---test-driven-development)
+-
+- [Princípios e vantagens](#princípios--vantagens)
+- [Como fazer](#processo-básico)
+
+[Boas práticas para testes](#boas-práticas-para-testes)
+-
+- [Nomeclatura](#nomeclatura-de-um-teste)
+- [Padrão AAA](#padrão-aaa)
+- [Princípios inversão de dependência](#princípio-inversão-de-dependência-solid)
+- [Independência e isolamento](#independência-e-isolamento)
+- [Cenário único](#cenário-único)
+- [Previsibilidade](#previsibilidade)
+<hr>
+
+# Parte prática
+
+
 
 # Objetivo
 
@@ -75,5 +107,55 @@ possui testes automatizados que ele é TDD.
 2. Implemente o código necessário para que o teste passe
 3. Refatore o código conforme for necessário
 
+## Boas práticas para testes
 
+### Nomeclatura de um teste
+
+``<AÇÂO> should <EFEITO> [when <CENARIO>]``
+
+Leia-se exemplo: ``<método delete> SHOULD <deletar objeto> [<when ID existir>]``
+
+### Padrão AAA
+
+- Arrange: instancie os objetos necessários (um New ou algo do tipo)
+- Act: execute as ações necessárias (deletar, inserir algo/regra de negócio)
+- Assert: declare o que deveria acontecer (resultado esperado)
+
+### Princípio inversão de dependência (SOLID)
+
+Se uma classe A depende de uma instância da classe B, não tem como testar a classe A de forma isolada. Na verdade, nem
+seria um teste unitário. Por isso utilizamos o AutoWired ou construtores.
+
+A inversão de controle ajuda na testabilidade e garante o isolamento da unidade a ser testada. Ou seja, ao invés de
+instanciarmos a classe B, instanciaremos o **Mock**, o objeto de "mentirinha" que simulará o **comportamento** da classe B.
+
+### Independência e isolamento
+
+Um teste não pode depender de outros testes, nem da ordem de execução.
+
+### Cenário único
+
+- O teste deve ter uma lógica simples, linear
+- O teste deve testar apenas um cenário
+  - Igual o exemplo acima. Se você faz um teste para deletar um ID existente, deve existir OUTRO teste para deletar com
+  um ID não existente
+- Não use condicionais e loops
+
+### Previsibilidade
+
+O resultado do teste deve ser sempre o mesmo para os mesmos dados.
+
+Ou seja, não é uma boa fazer o resultado do teste depender de algo que pode variar (tipo timestamp atual (Instant.now()))
+e valores aleatórios.
+
+## Visão gerão Junit5
+
+### [Site](https://junit.org/junit5/)
+
+1. Criar uma classe de testes
+2. A classe pode conter um ou mais métodos com a annotation @Test
+3. Um método de @Test deve ser void
+4. O objetivo é que todos os métodos @Test passem sem falhas
+5. O que define se um método @Test passa ou não são as "assertions" deste método
+6. Se um ou mais falhas ocorrem, estão são mostradas depois da execução do teste
 
